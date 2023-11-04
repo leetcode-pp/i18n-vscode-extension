@@ -1,34 +1,47 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
+import { t } from "./languageHelper/index";
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
-  // 注册 textDocument/hover 请求的处理函数
+export async function activate(context: vscode.ExtensionContext) {
+  // 注册悬停提供程序
+  let hoverProvider = vscode.languages.registerHoverProvider(
+    ["javascript", "javascriptreact", "plaintext", "jsx"],
+    {
+      async provideHover(document, position) {
+        const range = document.getWordRangeAtPosition(position) as any;
+        const word = document.getText(range);
 
+        // 根据当前行获取文本内容
+        const lineContent = document.getText(document.lineAt(position).range);
+        const tCtx = lineContent.match(/t\(['"].+['"]\)?/g)?.[0] || "";
+        const objPath = tCtx?.replace(/t\(['"]/g, "").replace(/['"]\)/g, "");
 
-  // Use the console to output diagnostic information (console.log) and errors (console.error)
-  // This line of code will only be executed once when your extension is activated
-  console.log(
-    'Congratulations, your extension "leetcode-cheatsheet-develop-helper" is now active!'
-  );
+        // 找出 t() 函数参数的位置
+        const start = lineContent.indexOf(objPath);
+        const end = start + word.length;
 
-  // The command has been defined in the package.json file
-  // Now provide the implementation of the command with registerCommand
-  // The commandId parameter must match the command field in package.json
-  let disposable = vscode.commands.registerCommand(
-    "leetcode-cheatsheet-develop-helper.helloWorld",
-    () => {
-      // The code you place here will be executed every time your command is executed
-      // Display a message box to the user
-      vscode.window.showInformationMessage(
-        "Hello World from Leetcode Cheatsheet Develop Helper!"
-      );
+        const range2 = new vscode.Range(
+          new vscode.Position(position.line, start),
+          new vscode.Position(position.line, end)
+        );
+
+        const content = new vscode.MarkdownString(``);
+        content.appendMarkdown(`
+- **中文：**${t(objPath, "zh")}  
+---
+- **英文：**${t(objPath, "en")}`);
+        content.supportHtml = true;
+        content.isTrusted = true;
+
+        if (lineContent.includes("t(") && tCtx.includes(word)) {
+          return new vscode.Hover(content, range2);
+        }
+
+        return null;
+      },
     }
   );
 
-  context.subscriptions.push(disposable);
+  context.subscriptions.push(hoverProvider);
 }
 
 // this method is called when your extension is deactivated

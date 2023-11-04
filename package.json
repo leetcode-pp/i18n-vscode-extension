@@ -2,15 +2,16 @@
 	"name": "leetcode-cheatsheet-develop-helper",
 	"displayName": "Leetcode Cheatsheet Develop Helper",
 	"description": "",
+	"publisher": "Renkin",
 	"version": "0.0.1",
 	"engines": {
-		"vscode": "^1.84.0"
+		"vscode": "^1.64.0"
 	},
 	"categories": [
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:leetcode-cheatsheet-develop-helper.helloWorld"
+		"onStartupFinished"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -22,17 +23,16 @@
 		]
 	},
 	"scripts": {
-		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./",
 		"pretest": "npm run compile && npm run lint",
-		"ext:build": "tsup src/extension.ts --external vscode",
+		"ext:build": "npm run compile && tsup src/extension.ts --external vscode",
 		"ext:dev": "nr ext:build --watch src",
-		"ext:publish": "nr ext:build && cd extension && vsce publish --no-dependencies",
-		"ext:pack": "vsce package --no-dependencies"
+		"ext:publish": "nr ext:build &&vsce publish --no-dependencies",
+		"ext:pack": "nr ext:build && vsce package --no-dependencies"
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.84.0",
+		"@types/vscode": "^1.64.0",
 		"@types/glob": "^7.2.0",
 		"@types/mocha": "^9.1.1",
 		"@types/node": "14.x",
