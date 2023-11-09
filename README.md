@@ -6,12 +6,12 @@ leetcode-cheatsheet 的 i18n 悬浮提示插件，该插件仅用于配合 [Leet
 
 1. 安装 `.vsix` 扩展包，如下：
 
-![](https://github.com/leetcode-pp/i18n-vscode-extension/assets/install.jpg)
+![](https://raw.githubusercontent.com/leetcode-pp/i18n-vscode-extension/main/assets/install.jpg)
 
 
 2. 鼠标悬浮在 `t` 函数上就可以看到对应的中英文信息了
 
-![](https://github.com/leetcode-pp/i18n-vscode-extension/assets/demo.png)
+![](https://raw.githubusercontent.com/leetcode-pp/i18n-vscode-extension/main/assets/demo.jpg)
 
 ## 插件规则
 
